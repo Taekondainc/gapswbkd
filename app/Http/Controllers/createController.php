@@ -879,6 +879,32 @@ echo "here";
 
 
         }}
+
+        $filed = request('filed');
+
+        if ($filed != null) {
+
+            $filed = request('filed');
+
+            foreach ($filed as $filer => $x) {
+                $request = new pdfs();
+
+                $ft =   Cloudder::upload($filed[$filer], null, array("timeout" => 200000, 'resource_type' => 'auto',  "folder" => 'pdfs'));
+                $tg = Cloudder::getResult($ft);
+                $url = $tg['secure_url'];
+                $type=$tg['resource_type'];
+                $request->url = $url;
+                $request->nod =$filed[$filer]->getClientOriginalName();
+                $request->mediaid = $validate['title'];
+                $request->save();
+
+
+            }
+        } else {
+
+        }
+
+
     }
 
 
