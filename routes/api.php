@@ -33,6 +33,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 
+    Route::post('codeethic',  [PageseditController::class, 'createdoc']);
+    Route::post('updatecodeethic',  [PageseditController::class, 'createdoc']);
+    Route::post('updatesw',  [PageseditController::class, 'createdoc']);
+
+
     Route::post('msearch',  [createController::class, 'searchm']);
     Route::post('esearch',  [createController::class, 'searche']);
     Route::post('psearch',  [createController::class, 'searchp']);
@@ -53,6 +58,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/createpersonell',  [createController::class, 'createpersonells']);
     Route::post('/ammedia',  [PageseditController::class, 'ammedia']);
 
+    Route::post('/createpage',  [PageseditController::class, 'createpage']);
 
     //media
     Route::post('/createmedia',  [createController::class, 'createmedia']);
@@ -122,7 +128,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
        Route::post('/subscribers',  [createController::class, 'subscribers']);
 
     //page edit routes
-    Route::post('/createpage',  [PageseditController::class, 'createpage']);
     Route::post('/mediaget',  [PageseditController::class, 'mediashow']);
     Route::post('/pagesections',  [PageseditController::class, 'pagesections']);
     Route::post('/pages',  [PageseditController::class, 'pages']);
