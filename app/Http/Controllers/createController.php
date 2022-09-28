@@ -317,14 +317,12 @@ class createController extends Controller
             $request->sprecialdata = 'null';
         }
 
-        $file = request('file');
-        if ($file != null) {
+
             $request->mediaid = $validate['title'];
-        } else {
-            $request->mediaid = 'null';
-        }
+
 
         $request->save();
+        $file = request('file');
         if ($file != null) {
          $file = request('file');
         foreach ($file as $filer => $x) {
@@ -348,18 +346,29 @@ class createController extends Controller
         }
 
 
-$gemail=subscribers::all();
-foreach ($gemail as $mail => $value) {
-    Mail::to($mail)->send(new Subscribe($mail));
-        return Response(
-            [
-                'success' => true,
-                'message' => "Thank you for subscribing to our email, please check your inbox"
-            ],
-            200
-        );  # code...
-}
+        $filed = request('filed');
 
+        if ($filed != null) {
+
+            $filed = request('filed');
+
+            foreach ($filed as $filer => $x) {
+                $request = new pdfs();
+
+                $ft =   Cloudder::upload($filed[$filer], null, array("timeout" => 200000, 'resource_type' => 'auto',  "folder" => 'pdfs'));
+                $tg = Cloudder::getResult($ft);
+                $url = $tg['secure_url'];
+                $type=$tg['resource_type'];
+                $request->url = $url;
+                $request->nod =$filed[$filer]->getClientOriginalName();
+                $request->mediaid = $validate['title'];
+                $request->save();
+
+
+            }
+        } else {
+
+        }
 
 
 
@@ -530,7 +539,6 @@ $request->save();
     {
 
         $request=request('keyvalue');
-
         $request=pdfs::where("mediaid",$request)->get();
          return response($request);
     }
@@ -982,6 +990,30 @@ echo "here";}else{
 
 
         }}
+
+        $filed = request('filed');
+
+        if ($filed != null) {
+
+            $filed = request('filed');
+
+            foreach ($filed as $filer => $x) {
+                $request = new pdfs();
+
+                $ft =   Cloudder::upload($filed[$filer], null, array("timeout" => 200000, 'resource_type' => 'auto',  "folder" => 'pdfs'));
+                $tg = Cloudder::getResult($ft);
+                $url = $tg['secure_url'];
+                $type=$tg['resource_type'];
+                $request->url = $url;
+                $request->nod =$filed[$filer]->getClientOriginalName();
+                $request->mediaid = $validate['title'];
+                $request->save();
+
+
+            }
+        } else {
+
+        }
     }
 
     public function updatemediapost(Request $request)
