@@ -32,9 +32,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/Admininfoupdate',  [createController::class, 'Admininfoupdate']);
 
 
-
-    Route::post('codeethic',  [PageseditController::class, 'createdoc']);
-    Route::post('updatecodeethic',  [PageseditController::class, 'createdoc']);
+    Route::post('createcode',  [PageseditController::class, 'createdoc']);
+    Route::post('docs',  [PageseditController::class, 'docs']);
+    Route::post('updatecodeethic',  [PageseditController::class, 'updatedoc']);
     Route::post('updatesw',  [PageseditController::class, 'createdoc']);
 
 
@@ -187,3 +187,5 @@ Route::post('/createuser',  [createController::class, 'createuser']);
   Route::post('/generaluploads',  [createController::class, 'media']);
   Route::post('/webpagedid',  [PageseditController::class, 'webpagedid']);
   Route::post('/pagewebs',  [PageseditController::class, 'pagewebs']);
+
+  Route::post('userdocs',  [PageseditController::class, 'docs']);

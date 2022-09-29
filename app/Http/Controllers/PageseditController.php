@@ -469,35 +469,48 @@ $title=$data['$filer']['mediaid'];
 
     public function updatedoc(Request $request)
     {
-        $id=request('updid');
+        $id=request('coe');
 
-        $webpage=request("webpage");
-        $file = request('file');
+        $file = request('thumbnail');
 
+print($file);
+        $pic = request('thumbnail')->getClientOriginalName();
+        $ft =   Cloudder::upload($file, null, array("timeout" => 200000,'resource_type' => 'auto', 'original_filename' => $pic, "folder" => 'pdfs'));
 
-        $pic = request('file')->getClientOriginalName();
-            $ft =   Cloudder::upload($file, null, array("timeout" => 200000,'resource_type' => 'auto', 'original_filename' => $pic, "folder" => 'pdfs'));
+        $tg = Cloudder::getResult($ft);
+        $url = $tg['secure_url'];
 
-            $tg = Cloudder::getResult($ft);
-            $url = $tg['secure_url'];
-
-            $requpdated = webpage::where("id", $id)->update(['url' => $url]);
-            $requpdated = webpage::where("id", $id)->update(['webpage' => $webpage]);
+        $requpdated = webdocs::where("webpage", $id)->update(['url' => $url]);
 
 
 
          }
          public function createdoc(Request $request)
          {
-             $filed = request('filed');
+             $filed = request('thumbnail');
              $ft =   Cloudder::upload($filed, null, array("timeout" => 200000,  "folder" => 'pdfs'));
              //  $image_url = Cloudder::show( array ("folder" => 'growgy'));
              $tg = Cloudder::getResult($ft);
              $thumbnail = $tg['secure_url'];
              $request = new webdocs();
-             $request->webpage = request("webpage");
+             $request->webpage = request("coe");
              $request->url = $thumbnail ;
              $request->save();
 
               }
+
+              public function docs(Request $request)
+         {
+            $wid=request('data');
+            $wevent=webdocs::where("webpage",$wid)->get();
+            return response($wevent);
+
+              }
+              public function swdocs(Request $request)
+              {
+                 $wid=request('data');
+                 $wevent=webdocs::where("webpage",$wid)->get();
+                 return response($wevent);
+
+                   }
 }
