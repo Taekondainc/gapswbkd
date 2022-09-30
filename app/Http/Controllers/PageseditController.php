@@ -12,6 +12,7 @@ use App\Models\blog;
 use App\Models\events;
 use App\Models\images;
 use App\Models\mediatable;
+use App\Models\memorial;
 use App\Models\pdfs;
 use App\Models\projects;
 use App\Models\User;
@@ -513,4 +514,223 @@ print($file);
                  return response($wevent);
 
                    }
+
+                   public function searchmemorials(Request $request)
+                   {
+
+                      $id = request("data");
+
+                      $lb = memorial::where("title", 'like', "%{$id}%")->orderByDesc('id')->get();
+
+                      return response()->json(  $lb );
+
+
+                        }
+                        public function  memorials(Request $request)
+                        {
+                           $wevent=memorial::all();
+                           return response($wevent);
+
+                             }
+                             public function updmemorials(Request $request)
+                             {
+                                $wid=request('data');
+                                $wevent=memorial::where("id",$wid)->get();
+                                return response($wevent);
+
+                                  }
+                   public function creatememorials(Request $request)
+                   {
+                       $validate = $request->validate(
+                           [
+                               'title' => 'Required|String',
+                               'thumbnail' => 'image|required',
+
+                           ]
+                       );
+                       $ft =   Cloudder::upload($validate['thumbnail'], null, array("timeout" => 200000,  "folder" => 'gapsw'));
+                       //  $image_url = Cloudder::show( array ("folder" => 'growgy'));
+                       $tg = Cloudder::getResult($ft);
+
+                       $thumbnail = $tg['secure_url'];
+                       $request = new memorial();
+                       $request->title = $validate['title'];
+                       $request->thumbnail = $thumbnail;
+                       $special=request('specialdata');
+                       if ($special != null) {
+                           $request->sprecialdata = request('specialdata');
+                       } else {
+                           $request->sprecialdata = 'null';
+                       }
+
+                       $request->mediaid = $validate['title'];
+                       $request->save();
+                       $file = request('file');
+
+                       if ($file != null) {
+
+                           $file = request('file');
+
+                           foreach ($file as $filer => $x) {
+                               $imagename = request('mediatitle');
+                               echo $file[$filer];
+                               $request = new mediatable();
+                               $request->mediaid = $validate['title'];
+
+                               $ft =   Cloudder::upload($file[$filer], null, array("timeout" => 200000, 'resource_type' => 'auto',  "folder" => 'gapsw'));
+                               $tg = Cloudder::getResult($ft);
+                               $url = $tg['secure_url'];
+                               $type=$tg['resource_type'];
+                               $request->mediatype=$type;
+                               $request->url = $url;
+                               $imagename = request('mediatitle');
+                               $request->medianame = $imagename[$filer];
+                               $request->save();
+
+
+                           }
+                       } else {
+
+                       }
+
+                       $filed = request('filed');
+
+                       if ($filed != null) {
+
+                           $filed = request('filed');
+
+                           foreach ($filed as $filer => $x) {
+                               $request = new pdfs();
+
+                               $ft =   Cloudder::upload($filed[$filer], null, array("timeout" => 200000, 'resource_type' => 'auto',  "folder" => 'pdfs'));
+                               $tg = Cloudder::getResult($ft);
+                               $url = $tg['secure_url'];
+                               $type=$tg['resource_type'];
+                               $request->url = $url;
+                               $request->nod =$filed[$filer]->getClientOriginalName();
+                               $request->mediaid = $validate['title'];
+                               $request->save();
+
+
+                           }
+                       } else {
+
+                       }
+
+
+                   }
+
+
+                   public function deletememorial(Request $request)
+                   {
+                       $id=request('data');
+                       $data=memorial::where("id",$id)->get();
+                        foreach ($data as $filer  ) {
+                            $search=$filer['mediaid'];
+
+                        $request=mediatable::where("mediaid",$search)->delete();
+                        $request=pdfs::where("mediaid",$search)->delete();
+
+                         }
+                        $event=memorial::where("id",$id)->delete();
+                        return response($event);
+
+                   }
+
+                   public function updatememorials(Request $request)
+                   {
+
+                       $req=request('updatetitle');
+                       $title=request('title');
+
+                       $id=request('updid');
+
+                       $file = request('file');
+
+                           $requpdated = mediatable::where("mediaid", $req)->update(['mediaid' => $title]);
+                           $requpdated = memorial::where("id", $id)->update(['mediaid' => $title]);
+
+                       $validate = $request->validate(
+                           [
+                               'title' => 'Required|String',
+
+                           ]
+                       );
+                     $chk=request('thumbnail');
+
+                       if ($chk != "empty") {
+
+                    $ft =   Cloudder::upload(request('thumbnail'), null, array("timeout" => 200000,  "folder" => 'gapsw'));
+                    $tg = Cloudder::getResult($ft);
+                       $thumbnail = $tg['secure_url'];
+                       $requpdated = memorial::where("id", $id)->update(['thumbnail' => $thumbnail]);
+                       } else {
+
+                       }
+                       $id=request('updid');
+                      $requpdated = memorial::where("id", $id)->update(['title' => $validate['title']]);
+
+$speciald=request('specialdata');
+                       if ($speciald != null) {
+                           $sprecialdata = request('specialdata');
+                           echo
+                           $requpdated = memorial::where("id", $id)->update(['sprecialdata' => $sprecialdata]);
+
+                       } else {
+
+                       }
+
+
+
+                       $file = request('file');
+
+                       if($file==null){
+                       }else{
+                       foreach ($file as $filer => $x) {
+
+                           $request = new mediatable();
+                           $request->mediaid = $validate['title'];
+
+                           $ft =   Cloudder::upload($file[$filer], null, array("timeout" => 200000, 'resource_type' => 'auto',  "folder" => 'gapsw'));
+                           $tg = Cloudder::getResult($ft);
+                           $url = $tg['secure_url'];
+                           $type=$tg['resource_type'];
+                           $request->mediatype=$type;
+                           $request->url = $url;
+                           $imagename = request('mediatitle');
+                           $request->medianame = $imagename[$filer];
+                           $request->save();
+
+
+                       }}
+
+                       $filed = request('filed');
+
+                       if ($filed != null) {
+
+                           $filed = request('filed');
+
+                           foreach ($filed as $filer => $x) {
+                               $request = new pdfs();
+
+                               $ft =   Cloudder::upload($filed[$filer], null, array("timeout" => 200000, 'resource_type' => 'auto',  "folder" => 'pdfs'));
+                               $tg = Cloudder::getResult($ft);
+                               $url = $tg['secure_url'];
+                               $type=$tg['resource_type'];
+                               $request->url = $url;
+                               $request->nod =$filed[$filer]->getClientOriginalName();
+                               $request->mediaid = $validate['title'];
+                               $request->save();
+
+
+                           }
+                       } else {
+
+                       }
+
+
+                   }
+
+
+
 }

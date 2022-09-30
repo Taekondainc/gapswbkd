@@ -60,6 +60,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/createpage',  [PageseditController::class, 'createpage']);
 
+    Route::post('/deletememorial',  [PageseditController::class, 'deletememorial']);
+    Route::post('/creatememorials',  [PageseditController::class, 'creatememorials']);
+    Route::post('/memorials',  [PageseditController::class, 'memorials']);
+    Route::post('/updatememorials',  [PageseditController::class, 'updatememorials']);
+    Route::post('/searchmemorials',  [PageseditController::class, 'searchmemorials']);
+    Route::post('/updmemorials',  [PageseditController::class, 'updmemorials']);
+
     //media
     Route::post('/createmedia',  [createController::class, 'createmedia']);
     Route::post('/updatemediapost',  [createController::class, 'updatemediapost']);
@@ -189,3 +196,5 @@ Route::post('/createuser',  [createController::class, 'createuser']);
   Route::post('/pagewebs',  [PageseditController::class, 'pagewebs']);
 
   Route::post('userdocs',  [PageseditController::class, 'docs']);
+
+  Route::post('/memorialsview',  [PageseditController::class, 'memorials']);
