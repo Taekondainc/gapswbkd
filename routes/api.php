@@ -57,9 +57,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/createappointment',  [createController::class, 'createappointment']);
     Route::post('/createpersonell',  [createController::class, 'createpersonells']);
     Route::post('/ammedia',  [PageseditController::class, 'ammedia']);
-
     Route::post('/createpage',  [PageseditController::class, 'createpage']);
 
+    //archives
+    Route::post('/earchive',  [createController::class, 'earchive']);
+    Route::post('/parchive',  [createController::class, 'parchive']);
+    Route::post('/barchive',  [createController::class, 'barchive']);
+   //memorials
     Route::post('/deletememorial',  [PageseditController::class, 'deletememorial']);
     Route::post('/creatememorials',  [PageseditController::class, 'creatememorials']);
     Route::post('/memorials',  [PageseditController::class, 'memorials']);
@@ -159,13 +163,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::post('/gapswregister',  [AuthController::class, 'gapswregister']);
 Route::post('/adminregisteruser',  [AuthController::class, 'Admingapswregister']);
 Route::post('/loginuser',  [AuthController::class, 'logingapsw']);
-Route::post('/userblog',  [createController::class, 'posts']);
+Route::post('/userblog',  [createController::class, 'uposts']);
 Route::post('/projects',  [createController::class, 'projects']);
+
+Route::post('/uprojects',  [createController::class, 'uprojects']);
 Route::post('/images',  [createController::class, 'images']);
 Route::post('/message',  [createController::class, 'message']);
 
 Route::post('/messages',  [createController::class, 'messages']);
-Route::post('/userevents',  [createController::class, 'events']);
+Route::post('/userevents',  [createController::class, 'uevents']);
 
 Route::post('/eventid',  [createController::class, 'eventid']);
 Route::post('/subscriberadd',  [createController::class, 'subscriberadd']);
@@ -182,7 +188,7 @@ Route::post('/createuser',  [createController::class, 'createuser']);
   Route::post('/pdfs',  [createController::class, 'pdfs']);
   Route::post('/usermediaget',  [PageseditController::class, 'mediashow']);
   Route::post('/userpagesections',  [PageseditController::class, 'pagesections']);
-  Route::post('/userprojects',  [createController::class, 'projects']);
+  Route::post('/userprojects',  [createController::class, 'uprojects']);
   Route::post('/projectid',  [createController::class, 'projectid']);
   Route::post('/blogid',  [createController::class, 'blogid']);
   Route::post('/pprojects',  [PageseditController::class, 'pagesections']);
@@ -198,3 +204,7 @@ Route::post('/createuser',  [createController::class, 'createuser']);
   Route::post('userdocs',  [PageseditController::class, 'docs']);
 
   Route::post('/memorialsview',  [PageseditController::class, 'memorials']);
+
+  Route::post('/ADprojects',  [createController::class, 'adprojects']);
+  Route::post('/ADevents',  [createController::class, 'adevents']);
+  Route::post('/ADarticles',  [createController::class, 'adarticles']);

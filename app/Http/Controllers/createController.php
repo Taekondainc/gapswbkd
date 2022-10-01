@@ -15,6 +15,7 @@ use App\Models\videos;
 
 use App\Mail\gapswmail;
 use App\Mail\Subscribe;
+use App\Models\memorial;
 use App\Models\message;
 use App\Models\pdfs;
 use App\Models\personell;
@@ -145,6 +146,8 @@ class createController extends Controller
         $request->title = $validate['title'];
         $request->description = $validate['description'];
         $request->thumbnail = $thumbnail;
+
+        $request->archive = "null";
         if (request('specialdata') != null) {
             $request->sprecialdata = request('specialdata');
         } else {
@@ -228,7 +231,7 @@ class createController extends Controller
         $request->title = $validate['title'];
         $request->description = $validate['description'];
         $request->thumbnail = $thumbnail;
-
+        $request->archive = "null";
         $request->projectdate= $validate['date'];
         if (request('specialdata') != null) {
             $request->sprecialdata = request('specialdata');
@@ -236,12 +239,8 @@ class createController extends Controller
             $request->sprecialdata = 'null';
         }
 
-        $file = request('file');
-        if ($file != null) {
             $request->mediaid = $validate['title'];
-        } else {
-            $request->mediaid = 'null';
-        } $request->save();
+       $request->save();
          if ($file != null) {
 
         $file = request('file');
@@ -310,7 +309,7 @@ class createController extends Controller
         $request->category = $validate['category'];
         $request->description = $validate['description'];
         $request->thumbnail = $thumbnail;
-
+        $request->archive = "null";
         if (request('specialdata') != null) {
             $request->sprecialdata = request('specialdata');
         } else {
@@ -448,6 +447,10 @@ $request->save();
     {
          $request=events::orderBy('created_at')->get();
          return response($request,200);
+    }public function uevents(Request $request)
+    {
+         $request=events::where("archive","null")->orderBy('created_at')->get();
+         return response($request,200);
     }
     public function personells(Request $request)
     {
@@ -466,9 +469,18 @@ $request->save();
     {
          $request=projects::orderBy('created_at')->get();
          return response($request,200);
-    } public function posts(Request $request)
+    }
+    public function uprojects(Request $request)
+    {
+         $request=projects::where("archive","null")->orderBy('created_at')->get();
+         return response($request,200);
+     } public function posts(Request $request)
     {
          $request=blog::orderBy('created_at')->get();
+         return response($request,200);
+    }public function uposts(Request $request)
+    {
+         $request=blog::where("archive","null")->orderBy('created_at')->get();
          return response($request,200);
     }
     public function updatepersonellid(Request $request)
@@ -1223,7 +1235,78 @@ $lb=applicants::where("name", 'like', "%{$id}%")->orderByDesc('id')->get();
 
         return response()->json(  $lb );
     }
+    public function earchive(Request $request)
+    {
 
 
+        $id=request('key');
+        $requpdated = events::where("id", $id)->where("archive", "null")->get();
+$count=count($requpdated);
+        if($count ==1){
+            $requpdated = events::where("id", $id)->update(['archive' => "archive"]);
+            }else{
 
+            $requpdated = events::where("id", $id)->update(['archive' => "null"]);
+            }
+
+    }
+    public function parchive(Request $request)
+    {
+
+        $id=request('key');
+        $requpdated = projects::where("id", $id)->where("archive", "null")->get();
+$count=count($requpdated);
+        if($count ==1){
+            $requpdated = projects::where("id", $id)->update(['archive' => "archive"]);
+            }else{
+
+            $requpdated = projects::where("id", $id)->update(['archive' => "null"]);
+            }
+
+    }
+    public function barchive(Request $request)
+    {
+
+        $id=request('key');
+        $requpdated = blog::where("id", $id)->where("archive", "null")->get();
+$count=count($requpdated);
+        if($count ==1){
+            $requpdated = blog::where("id", $id)->update(['archive' => "archive"]);
+            }else{
+
+            $requpdated = blog::where("id", $id)->update(['archive' => "null"]);
+            }
+
+    }
+     public function marchive(Request $request)
+    {
+
+
+        $id=request('key');
+
+
+            $requpdated = memorial::where("id", $id)->update(['archive' => "archive"]);
+    }
+
+    public function adprojects(Request $request)
+    {
+
+        $lb = projects::where("archive", "archive")->get();
+        return response()->json(  $lb );
+
+    }
+    public function adevents(Request $request)
+    {
+
+        $lb = events::where("archive", "archive")->get();
+        return response()->json(  $lb );
+
+    }
+    public function adarticles(Request $request)
+    {
+
+        $lb = blog::where("archive", "archive")->get();
+        return response()->json(  $lb );
+
+    }
 }
